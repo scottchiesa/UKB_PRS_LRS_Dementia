@@ -1,4 +1,11 @@
+***************************************************************************
+********************UKB CAD PRS LRS AND DEMENTIA***************************
+************Authors: Sittichokkananon, Garfield, and Chiesa****************
+****************************2023/2024**************************************
+***************************************************************************
+
 use "/home/rmgpstc/Scratch/UKB_CAD_PRS/Arisa_Selected_Variables_270324.dta", clear
+
 
 ///////////////////////////////////////////////////////////////////////////
 //////////////////////////////// PRS //////////////////////////////////////
@@ -449,13 +456,10 @@ tab allcause_source
 tab alzheimer_source
 tab vascular_source
 
-///////////////////////////////////
-///////////////////////////////////
-
 format date_assess_bl %td
 format date_death %td
 
-//////removal of anyone diagnosed with dementia bf baseline assessment/////
+//Remove anyone diagnosed with dementia before baseline assessment/////
 
 count if allcause_date < date_assess_bl 
 drop if allcause_date < date_assess_bl 
@@ -500,14 +504,14 @@ tab allcause_new
 tab alzheimer_new
 tab vascular_new
 
-//small alterations for cox models//
+//Small alterations for cox models//
 
 format allcause_date %td
 replace allcause_date=date("19/12/2022", "DMY") if allcause_date==.
 clonevar allcause_date_forcox = allcause_date
 replace allcause_date_forcox = date_death if allcause_date != date_death & allcause_date !=date("19/12/2022", "DMY") & date_death != .
 
-//note: end of study date = 13/12/2022//
+//Note: end of study date = 13/12/2022//
 
 format alzheimer_date %d
 replace alzheimer_date=date("13/12/2022", "DMY") if alzheimer_date==.
@@ -519,7 +523,7 @@ replace vascular_date=date("13/12/2022", "DMY") if vascular_date==.
 clonevar vascular_date_forcox = vascular_date
 replace vascular_date_forcox = date_death if vascular_date != date_death & vascular_date !=date("13/12/2022", "DMY") & date_death != .
 
-//for calculating follow-up years//
+//For calculating follow-up years//
 
 gen followup = allcause_date - date_assess_bl
 gen diag_time = (allcause_date - date_assess_bl)/365  if allcause_new == 1
@@ -637,9 +641,9 @@ use "/home/rmgpstc/Scratch/UKB_CAD_PRS/Dataset_ready_for_imputation_analyses.dta
 
 //PRS//
 
-mi estimate, eform("exp"): regress loggm PRS age i.sex tv	//running all of these with outcomes ln-transformed to have a log-linear response//
+mi estimate, eform("exp"): regress loggm PRS age i.sex tv	
 mi estimate, eform("exp"): regress loghippocampus PRS age i.sex tv
-mi estimate, eform("exp"): regress logwmh PRS age i.sex		//output exponentiated form as geometric means. coefficient represents ratio of expected means so is essentially a percentage change//
+mi estimate, eform("exp"): regress logwmh PRS age i.sex		
 
 //LRS//
 
@@ -653,25 +657,10 @@ mi estimate, eform("exp"): regress loggm i.PRS_LRS_tertile_imputed age i.sex i.e
 mi estimate, eform("exp"): regress loghippocampus i.PRS_LRS_tertile_imputed age i.sex i.edu socioeco child_bmi tv
 mi estimate, eform("exp"): regress logwmh i.PRS_LRS_tertile_imputed age i.sex i.edu socioeco child_bmi
 
+
 //////////////////////////////////////////////////////////////////////////
-///////////////////////////////INTERACTIONS///////////////////////////////			
+///////////////////////////WMH-AGE INTERACTION////////////////////////////			
 //////////////////////////////////////////////////////////////////////////
-
-//GM//
-
-mi estimate, eform("exp"): regress loggm i.LRS_tertile_imputed##c.age i.sex socioeco i.edu tv child_bmi
-mimrgns, dydx(LRS_tertile_imputed) at(age=(50(5)70)) vsquish cmdmargins
-mimrgns, at(LRS_tertile_imputed=(1 2 3) age=(50(5)70)) vsquish cmdmargins
-marginsplot, noci x(age) recast(line) xlabel(50(5)70) plot1opts(lcolor("0 90 0")) plot2opts(lcolor("192 96 0")) plot3opts(lcolor("160 0 0"))
-
-//HIPPOCAMPUS//
-
-mi estimate, eform("exp"): regress loghippocampus i.LRS_tertile_imputed##c.age i.sex socioeco i.edu tv child_bmi
-mimrgns, dydx(LRS_tertile_imputed) at(age=(50(5)70)) vsquish cmdmargins
-mimrgns, at(LRS_tertile_imputed=(1 2 3) age=(50(5)70)) vsquish cmdmargins
-marginsplot, noci x(age) recast(line) xlabel(50(5)70) plot1opts(lcolor("0 90 0")) plot2opts(lcolor("192 96 0")) plot3opts(lcolor("160 0 0"))
-
-//WMH//
 
 mi estimate: regress c.logwmh i.LRS_tertile_imputed##c.age i.sex i.edu socioeco child_bmi
 mimrgns, dydx(LRS_tertile_imputed) at(age=(50(5)70)) vsquish cmdmargins
@@ -682,7 +671,6 @@ marginsplot, noci x(age) recast(line) xlabel(50(5)70) plot1opts(lcolor("0 90 0")
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////COX MODELS//////////////////////////////
 //////////////////////////////////////////////////////////////////////////
-
 
 ///////////////////////////ALL-CAUSE DEMENTIA//////////////////////////////
 
