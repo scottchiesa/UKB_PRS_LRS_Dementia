@@ -4,7 +4,7 @@ _Arisa Sittichokkananon, Victoria Garfield, and Scott T Chiesa_
 
 Stata code for manuscript investigating future risk of dementia based on genetic and lifestyle risk for coronary artery disease. 
 
-Manuscript currently under preparation and page will be updated once accepted.
+Manuscript currently under peer review and page will be updated once accepted.
 
 ## ABSTRACT 
 
