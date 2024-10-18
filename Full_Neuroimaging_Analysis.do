@@ -18,7 +18,7 @@ set maxvar 10000
 
 **Set directory**
 
-cap cd "Y:\PRS LRS Brain Health\Debug"
+cap cd "C:\Users\scott\OneDrive\Desktop\Debug\"
 cap cd "/home/rmgpstc/Scratch/PRS_LRS"
 
 use "Complete_Case_Dataset", clear
