@@ -4,7 +4,7 @@ _Arisa Sittichokkananon, Victoria Garfield, and Scott T Chiesa_
 
 Stata code for manuscript investigating future risk of dementia based on genetic and lifestyle risk for coronary artery disease. Statistical code split into multiple sections which can be run as one continuous script using Master_Do_File.do.
 
-Manuscript accepted to Circulation and DOI will be posted once published.
+Manuscript accepted to _Circulation_ and DOI will be posted once published.
 
 ## ABSTRACT 
 
